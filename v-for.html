@@ -1,0 +1,152 @@
+<html>
+
+    <head>
+
+        <title>Pet Store</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" />
+
+    </head>
+
+    <body>
+
+        <div id="app">
+            <div v-if="showProduct">
+                <h1 v-text="site_name"></h1>
+                <button @click = 'showCheckOut'>
+                    {{cartItemCount}}
+                    <span class="fas fa-cart-plus"></span>Checkout
+                </button>
+                <img :src="image" alt="Cat Food" width="200px" height="200px">
+                <h2 v-text="Product"></h2>
+                <p v-text="Description"></p>
+                <p v-text="Price"></p>
+                <p>Available Stock: {{availableInventory}}</p>
+                <button @click="addToCart(); removeFromInventory();" v-if="canAddToCart">Add to Cart</button>
+                <button disabled="disabled" v-else>Add to Cart</button>
+            </div>
+
+            <div v-else>
+                <button @click = 'showCheckOut'>
+                    {{cartItemCount}}
+                    <span class="fas fa-cart-plus"></span>Checkout
+                </button>
+                <h1>Checkout Page</h1>
+                <p>
+                    <strong>First Name:</strong>
+                    <input v-model="order.firstname">
+                </p>
+                <p>
+                    <strong>Last Name:</strong>
+                    <input v-model="order.lastname">
+                </p>
+                <p>
+                    <strong>Address:</strong>
+                    <input v-model="order.address">
+                </p>
+                <p>
+                    <strong>City:</strong>
+                    <input v-model="order.city">
+                </p>
+                <p>
+                    <strong>State:</strong>
+                    <select v-model="order.state">
+                        <option value="disabled value" >State</option>
+                        <option v-bind:value="states.AL" >AL</option>
+                        <option v-bind:value="states.AR" >AR</option>
+                        <option v-bind:value="states.CA" >CA</option>
+                        <option v-bind:value="states.NV" >NV</option>
+                    </select>
+                <p>
+                    <strong>Zip Code:</strong>
+                    <input v-model.number="order.zip" type="number"/>
+                </p>
+                <p>
+                    <input type="checkbox" id="gift" value="true" v-model="order.gift" v-bind:true-value="order.sendGift" v-bind:false-value="order.dontSendGift">
+                    <label for="gift">Ship as a Gift?</label>
+                </p>
+                <p>
+                    <input type="radio" id="home" value="Home" v-model="order.method">
+                    <label for="home">Home</label>
+                    <input type="radio" id="business" value="Business" v-model="order.method">
+                    <label for="home">Business</label>
+                </p>
+                </p>
+                <h2>
+                    Order Information
+                </h2>
+                <p>First Name: {{order.firstname}}</p>
+                <p>Last Name: {{order.lastname}}</p>
+                <p>Address: {{order.address}}</p>
+                <p>City: {{order.city}}</p>
+                <p>State: {{order.state}}</p>
+                <p>Zip Code: {{order.zip}}</p>
+                <p>Ship as a Gift? {{order.gift}}</p>
+                <p>Method: {{order.method}}</p>
+                <button @click="submitForm">Place an Order</button>
+            </div>
+
+        </div>
+
+        <script>
+
+            let webStore = new Vue({
+                el: '#app',
+                data:  {
+                    site_name: 'Pet Store',
+                    ID: 1001,
+                    Product: 'Cat Food, 25lb bag',
+                    Description: 'A 25 pound bag of <em>irresistible</em>' + ' organic goodness of food four cat.',
+                    Price: '$20',
+                    image: 'images/cat_food.png' ,
+                    availableInventory: 5,
+                    showProduct: true,
+                    order: {
+                        firstname: '',
+                        lastname: '',
+                        address: '',
+                        city: '',
+                        state: '',
+                        zip:'',
+                        gift: '',
+                        sendGift: 'Send as a Gift',
+                        dontSendGift: 'Do not send as a gift.',
+                        method: ''
+                    },
+                    states: {
+                        AL: 'Alaska',
+                        AR: 'Arizona',
+                        CA: 'California',
+                        NV: 'Nevada'
+                    },
+                    cart: []
+                },
+                methods: {
+                    addToCart: function(){
+                        this.cart.push(this.ID)
+                    },
+                    removeFromInventory: function(){
+                        this.availableInventory -= 1;
+                    },
+                    showCheckOut: function(){
+                        this.showProduct = this.showProduct ? false : true;
+                    },
+                    submitForm: function(){
+                        alert('Order Submitted!')
+                    }
+                },
+                computed: {
+                    cartItemCount: function(){
+                        return this.cart.length || "";
+                    },
+                    canAddToCart: function(){
+                        return this.availableInventory > 0;
+                    }
+                }
+            });
+
+        </script>
+
+    </body>
+
+</html>
